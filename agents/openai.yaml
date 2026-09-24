@@ -1,0 +1,4 @@
+interface:
+  display_name: "paperPlot"
+  short_description: "Publication-quality Python scientific plotting"
+  default_prompt: "Use $paperplot to create a publication-quality scientific figure from my data."
