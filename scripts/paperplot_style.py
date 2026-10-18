@@ -10,6 +10,26 @@ import numpy as np
 import seaborn as sns
 
 DEFAULT_SINGLE_FIGSIZE = (8, 6)
+# Per-panel size for 3- and 4-column layouts, keeping the figure 16-19 in wide.
+COLUMN_PANEL_SIZE = {3: (5.6, 4.4), 4: (4.6, 3.9)}
+# Panel labels sit this far above the axes; equals 0.03 of a 6 in panel and
+# clears the top y-tick label on the smaller panels of 3- and 4-column layouts.
+PANEL_LABEL_OFFSET_POINTS = 13.0
+
+
+def panel_size(columns: int) -> tuple[float, float]:
+    """Per-panel size in inches for a layout with this many columns."""
+    return COLUMN_PANEL_SIZE.get(columns, DEFAULT_SINGLE_FIGSIZE)
+
+
+def printed_page_fraction(fig: plt.Figure, text_width: float = 6.5, text_height: float = 9.0) -> float:
+    """Fraction of the page text height the tight figure takes when printed at text width.
+
+    Aim for about 0.5 and keep it below about 0.8 so the caption fits on the same page.
+    """
+    fig.canvas.draw()
+    box = fig.get_tightbbox(fig.canvas.get_renderer())
+    return text_width * box.height / box.width / text_height
 
 
 def apply_paper_style(font_size: float = 16) -> list[tuple[float, float, float]]:
@@ -40,16 +60,21 @@ def add_panel_labels(
     axes: Iterable[plt.Axes] | np.ndarray,
     *,
     x: float = -0.08,
-    y: float = 1.03,
+    offset_points: float = PANEL_LABEL_OFFSET_POINTS,
     font_size: float = 16,
 ) -> None:
-    """Add uppercase (A), (B), ... labels at the upper-left of each axes."""
+    """Add uppercase (A), (B), ... labels just above the upper-left corner of each axes.
+
+    The label is offset by a fixed distance in points rather than a fraction of
+    the axes height, so it clears the top y-tick label for any panel size.
+    """
     for index, ax in enumerate(np.asarray(axes, dtype=object).reshape(-1)):
-        ax.text(
-            x,
-            y,
+        ax.annotate(
             f"({chr(65 + index)})",
-            transform=ax.transAxes,
+            xy=(x, 1.0),
+            xycoords="axes fraction",
+            xytext=(0.0, offset_points),
+            textcoords="offset points",
             ha="left",
             va="bottom",
             fontsize=font_size,
