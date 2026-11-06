@@ -5,4 +5,4 @@ This file stores additional durable preferences explicitly supplied in later pro
 ## Additional rules
 
 - For distinct lines and points within one figure, prefer Seaborn’s `deep` categorical palette. When a perceptually uniform colormap is needed for continuous values, prefer `viridis`. Keep the same category color across panels and legends.
-- Layout and printed size: use a 3- or 4-column layout when the panels are not dense or the panel count is a multiple of three. Size the exported figure so that at text width it occupies less than a full page, ideally about half a page; if it would exceed one page, shrink the panels or split it into two figures.
+- Layout and printed size: 2-, 3-, and 4-column layouts are all allowed. Choose based on panel count, content density, and readability; generally keep the number of rows to 3 or fewer. At manuscript text width, size the exported figure to occupy less than a full page, ideally about half a page; if it would exceed one page, reduce panel sizes or split it into two figures.
